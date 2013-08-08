@@ -25,4 +25,4 @@ type Packet struct{}
 // produces .pcap files. It will attempt to parse the entire file. If an error
 // is encountered, as much of the parsed content as is possible will be returned,
 // along with an error value.
-func Parse(src io.Reader) (*PcapFile, error) {}
+func Parse(src io.Reader) (PcapFile, error) {}
