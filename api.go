@@ -131,6 +131,12 @@ func Parse(src io.Reader) (PcapFile, error) {
 		return *file, err
 	}
 
+	// Then populate the file header.
+	err = populateFileHeader(file, src, flipped)
+	if err != nil {
+		return *file, err
+	}
+
 	return *file, nil
 }
 
