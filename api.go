@@ -111,7 +111,7 @@ type PcapFile struct {
 // contains the timestamp on the packet, some information about packet size,
 // and the recorded bytes from the packet.
 type Packet struct {
-	Timestamp   time.Time
+	Timestamp   time.Duration
 	IncludedLen uint32
 	ActualLen   uint32
 	Data        []byte
