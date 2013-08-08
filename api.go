@@ -200,3 +200,29 @@ func populateFileHeader(file *PcapFile, src io.Reader, flipped bool) error {
 
 	return nil
 }
+
+// populatePacketHeader reads the next 16 bytes out of the file and builds it into a
+// packet header.
+func populatePacketHeader(packet *Packet, src io.Reader, flipped bool) error {
+	buffer := make([]byte, 16)
+	read_count, err := src.Read(buffer)
+
+	if err != nil {
+		return err
+	} else if read_count != 16 {
+		return errors.New("Insufficient length.")
+	}
+
+	// First is a pair of fields that build up the timestamp.
+	ts_seconds := getUint32(buffer[0:4], flipped)
+	ts_millis := getUint32(buffer[4:8], flipped)
+	packet.Timestamp = (time.Duration(ts_seconds) * time.Second) + (time.Duration(ts_millis) * time.Millisecond)
+
+	// Next is the length of the data segment.
+	packet.IncludedLen = getUint32(buffer[8:12], flipped)
+
+	// Then the original length of the packet.
+	packet.ActualLen = getUint32(buffer[12:16], flipped)
+
+	return nil
+}
