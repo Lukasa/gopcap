@@ -98,7 +98,7 @@ const (
 type PcapFile struct {
 	MajorVersion uint16
 	MinorVersion uint16
-	TZCorrection int // In seconds east of UTC
+	TZCorrection int32 // In seconds east of UTC
 	SigFigs      uint32
 	MaxLen       uint32
 	LinkType     Link
