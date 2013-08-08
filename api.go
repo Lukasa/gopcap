@@ -8,6 +8,7 @@ package gopcap
 
 import (
 	"io"
+	"time"
 )
 
 // Link encodes a given Link-Layer header type. See http://www.tcpdump.org/linktypes.html for a more-full
@@ -107,7 +108,12 @@ type PcapFile struct {
 // Packet is a representation of a single network packet. The structure
 // contains the timestamp on the packet, some information about packet size,
 // and the recorded bytes from the packet.
-type Packet struct{}
+type Packet struct {
+	Timestamp   time.Time
+	IncludedLen uint32
+	ActualLen   uint32
+	Data        []byte
+}
 
 // Parse is the external API of gopcap. It takes anything that implements the
 // io.Reader interface, but will mostly expect a file produced by anything that
