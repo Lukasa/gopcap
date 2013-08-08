@@ -10,6 +10,87 @@ import (
 	"io"
 )
 
+// Link encodes a given Link-Layer header type. See http://www.tcpdump.org/linktypes.html for a more-full
+// explanation of each header type.
+type Link uint32
+
+const (
+	NULL                       Link = 0
+	ETHERNET                   Link = 1
+	AX25                       Link = 3
+	IEEE802_5                  Link = 6
+	ARCNET_BSD                 Link = 7
+	SLIP                       Link = 8
+	PPP                        Link = 9
+	FDDI                       Link = 10
+	PPP_HDLC                   Link = 50
+	PPP_ETHER                  Link = 51
+	ATM_RFC1483                Link = 100
+	RAW                        Link = 101
+	C_HDLC                     Link = 104
+	IEEE802_11                 Link = 105
+	FRELAY                     Link = 107
+	LOOP                       Link = 108
+	LINUX_SLL                  Link = 113
+	LTALK                      Link = 114
+	PFLOG                      Link = 117
+	IEEE802_11_PRISM           Link = 119
+	IP_OVER_FC                 Link = 122
+	SUNATM                     Link = 123
+	IEEE802_11_RADIOTAP        Link = 127
+	ARCNET_LINUX               Link = 129
+	APPLE_IP_OVER_IEEE1394     Link = 138
+	MTP2_WITH_PHDR             Link = 139
+	MTP2                       Link = 140
+	MTP3                       Link = 141
+	SCCP                       Link = 142
+	DOCSIS                     Link = 143
+	LINUX_IRDA                 Link = 144
+	IEEE802_11_AVS             Link = 163
+	BACNET_MS_TP               Link = 165
+	PPP_PPPD                   Link = 166
+	GPRS_LLC                   Link = 169
+	LINUX_LAPD                 Link = 177
+	BLUETOOTH_HCI_H4           Link = 187
+	USB_LINUX                  Link = 189
+	PPI                        Link = 192
+	IEEE802_15_4               Link = 195
+	SITA                       Link = 196
+	ERF                        Link = 197
+	BLUETOOTH_HCI_H4_WITH_PHDR Link = 201
+	AX25_KISS                  Link = 202
+	LAPD                       Link = 203
+	PPP_WITH_DIR               Link = 204
+	C_HDLC_WITH_DIR            Link = 205
+	FRELAY_WITH_DIR            Link = 206
+	IPMB_LINUX                 Link = 209
+	IEEE802_15_4_NONASK_PHY    Link = 215
+	USB_LINUX_MMAPPED          Link = 220
+	FC_2                       Link = 224
+	FC_2_WITH_FRAME_DELIMS     Link = 225
+	IPNET                      Link = 226
+	CAN_SOCKETCAN              Link = 227
+	IPV4                       Link = 228
+	IPV6                       Link = 229
+	IEEE802_15_4_NOFCS         Link = 230
+	DBUS                       Link = 231
+	DVB_CI                     Link = 235
+	MUX27010                   Link = 236
+	STANAG_5066_D_PDU          Link = 237
+	NFLOG                      Link = 239
+	NETANALYZER                Link = 240
+	NETANALYZER_TRANSPARENT    Link = 241
+	IPOIB                      Link = 242
+	MPEG_2_TS                  Link = 243
+	NG40                       Link = 244
+	NFC_LLCP                   Link = 245
+	INFINIBAND                 Link = 247
+	SCTP                       Link = 248
+	USBPCAP                    Link = 249
+	RTAC_SERIAL                Link = 250
+	BLUETOOTH_LE_LL            Link = 251
+)
+
 // PcapFile represents the parsed form of a single .pcap file. The structure
 // contains some details about the file itself, but is mostly a container for
 // the parsed Packets.
