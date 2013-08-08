@@ -94,7 +94,15 @@ const (
 // PcapFile represents the parsed form of a single .pcap file. The structure
 // contains some details about the file itself, but is mostly a container for
 // the parsed Packets.
-type PcapFile struct{}
+type PcapFile struct {
+	MajorVersion uint16
+	MinorVersion uint16
+	TZCorrection int // In seconds east of UTC
+	SigFigs      uint32
+	MaxLen       uint32
+	LinkType     Link
+	Packets      []Packet
+}
 
 // Packet is a representation of a single network packet. The structure
 // contains the timestamp on the packet, some information about packet size,
