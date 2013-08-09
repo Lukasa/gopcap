@@ -126,7 +126,7 @@ func Parse(src io.Reader) (PcapFile, error) {
 	file := new(PcapFile)
 
 	// Check whether this is a libpcap file at all, and if so what byte ordering it has.
-	cont, flipped, err := checkMagicNum(src)
+	_, flipped, err := checkMagicNum(src)
 	if err != nil {
 		return *file, err
 	}
