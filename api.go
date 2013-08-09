@@ -137,7 +137,21 @@ func Parse(src io.Reader) (PcapFile, error) {
 		return *file, err
 	}
 
-	return *file, nil
+	// Whatever remains now are packets. Parse the rest of the file.
+	file.Packets = make([]Packet, 0)
+
+	for err == nil {
+		pkt := new(Packet)
+		err = parsePacket(pkt, src, flipped)
+		file.Packets = append(file.Packets, *pkt)
+	}
+
+	// EOF is a safe error, so switch that to nil.
+	if err == io.EOF {
+		err = nil
+	}
+
+	return *file, err
 }
 
 // checkMagicNum checks the first four bytes of a pcap file, searching for the magic number
@@ -166,6 +180,26 @@ func checkMagicNum(src io.Reader) (bool, bool, error) {
 	}
 
 	return false, false, errors.New("Not a pcap file.")
+}
+
+// parsePacket parses a full packet out of the pcap file. It returns an error if any problems were
+// encountered.
+func parsePacket(pkt *Packet, src io.Reader, flipped bool) error {
+	err := populatePacketHeader(pkt, src, flipped)
+
+	if err != nil {
+		return err
+	}
+
+	data := make([]byte, pkt.IncludedLen)
+	readlen, err := src.Read(data)
+	pkt.Data = data
+
+	if uint32(readlen) != pkt.IncludedLen {
+		err = errors.New("Unexpected EOF")
+	}
+
+	return err
 }
 
 // populateFileHeader reads the next 20 bytes out of the .pcap file and uses it to populate the
