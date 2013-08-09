@@ -207,9 +207,7 @@ func populatePacketHeader(packet *Packet, src io.Reader, flipped bool) error {
 	buffer := make([]byte, 16)
 	read_count, err := src.Read(buffer)
 
-	if err != nil {
-		return err
-	} else if read_count != 16 {
+	if read_count != 16 {
 		return errors.New("Insufficient length.")
 	}
 
@@ -224,5 +222,5 @@ func populatePacketHeader(packet *Packet, src io.Reader, flipped bool) error {
 	// Then the original length of the packet.
 	packet.ActualLen = getUint32(buffer[12:16], flipped)
 
-	return nil
+	return err
 }
