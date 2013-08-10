@@ -7,9 +7,13 @@ functionality in as clear an API as possible.
 package gopcap
 
 import (
+	"errors"
 	"io"
 	"time"
 )
+
+// Errors
+var NotAPcapFile error = errors.New("Not a pcap file.")
 
 // Link encodes a given Link-Layer header type. See http://www.tcpdump.org/linktypes.html for a more-full
 // explanation of each header type.
