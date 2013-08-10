@@ -2,7 +2,6 @@ package gopcap
 
 import (
 	"bytes"
-	"errors"
 	"io"
 	"time"
 )
@@ -49,7 +48,7 @@ func parsePacket(pkt *Packet, src io.Reader, flipped bool) error {
 	pkt.Data = data
 
 	if uint32(readlen) != pkt.IncludedLen {
-		err = errors.New("Unexpected EOF")
+		err = UnexpectedEOF
 	}
 
 	return err
