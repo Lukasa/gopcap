@@ -18,11 +18,11 @@ func checkMagicNum(src io.Reader) (bool, bool, error) {
 	buffer := make([]byte, 4)
 	read_count, err := src.Read(buffer)
 
-	if err != nil {
-		return false, false, err
-	}
 	if read_count != 4 {
 		return false, false, InsufficientLength
+	}
+	if (err != nil) && (err != io.EOF) {
+		return false, false, err
 	}
 
 	if bytes.Compare(buffer, magic) == 0 {
