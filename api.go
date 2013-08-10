@@ -14,6 +14,7 @@ import (
 
 // Errors
 var NotAPcapFile error = errors.New("Not a pcap file.")
+var InsufficientLength error = errors.New("Insufficient length.")
 
 // Link encodes a given Link-Layer header type. See http://www.tcpdump.org/linktypes.html for a more-full
 // explanation of each header type.

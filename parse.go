@@ -23,7 +23,7 @@ func checkMagicNum(src io.Reader) (bool, bool, error) {
 		return false, false, err
 	}
 	if read_count != 4 {
-		return false, false, errors.New("Insufficent length.")
+		return false, false, InsufficientLength
 	}
 
 	if bytes.Compare(buffer, magic) == 0 {
@@ -64,7 +64,7 @@ func populateFileHeader(file *PcapFile, src io.Reader, flipped bool) error {
 	if err != nil {
 		return err
 	} else if read_count != 20 {
-		return errors.New("Insufficient length.")
+		return InsufficientLength
 	}
 
 	// First two bytes are the major version number.
@@ -95,7 +95,7 @@ func populatePacketHeader(packet *Packet, src io.Reader, flipped bool) error {
 	read_count, err := src.Read(buffer)
 
 	if read_count != 16 {
-		return errors.New("Insufficient length.")
+		return InsufficientLength
 	}
 
 	// First is a pair of fields that build up the timestamp.
