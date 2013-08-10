@@ -20,15 +20,16 @@ func getUint16(buf []byte, flipped bool) uint16 {
 // getUint32 takes a four-element byte slice and returns the uint32 contained within it. If flipped
 // is set, assumes the byte order is reversed.
 func getUint32(buf []byte, flipped bool) uint32 {
-	var num uint64
+	num := uint32(0)
+	first, second, third, fourth := 0, 1, 2, 3
 
-	if !flipped {
-		num, _ = binary.Uvarint(buf)
-	} else {
-		num, _ = binary.Uvarint([]byte{buf[3], buf[2], buf[1], buf[0]})
+	if flipped {
+		first, second, third, fourth = 3, 2, 1, 0
 	}
 
-	return uint32(num)
+	num = (uint32(buf[first]) << 24) + (uint32(buf[second]) << 16) + (uint32(buf[third]) << 8) + uint32(buf[fourth])
+
+	return num
 }
 
 // getInt32 takes a four-element byte slice and returns the Int32 contained within it. If flipped
