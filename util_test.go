@@ -69,3 +69,37 @@ func TestGetUint32(t *testing.T) {
 		}
 	}
 }
+
+func TestGetInt32(t *testing.T) {
+	// Prepare some test byte arrays.
+	in := [][]byte{
+		[]byte{0x99, 0x12, 0x66, 0x00},
+		[]byte{0xff, 0x01, 0x08, 0xdd},
+		[]byte{0x09, 0x0a, 0x12, 0x66},
+	}
+
+	out_not_flipped := []int32{
+		int32(-1726847488),
+		int32(-16709411),
+		int32(151655014),
+	}
+
+	out_flipped := []int32{
+		int32(6689433),
+		int32(-586677761),
+		int32(1712458249),
+	}
+
+	for i, input := range in {
+		out1 := getInt32(input, false)
+		out2 := getInt32(input, true)
+
+		if out1 != out_not_flipped[i] {
+			t.Errorf("Incorrect output: expected %v, got %v.", out_not_flipped[i], out1)
+		}
+
+		if out2 != out_flipped[i] {
+			t.Errorf("Incorrect output: expected %v, got %v.", out_flipped[i], out2)
+		}
+	}
+}
