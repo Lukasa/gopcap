@@ -14,11 +14,12 @@ func TestCheckMagicNum(t *testing.T) {
 		ByteReader{0xa1, 0xb2, 0xc3, 0xd4},
 		ByteReader{0xd4, 0xc3, 0xb2, 0xa1},
 		ByteReader{0xd4, 0xc3, 0xb2, 0xa0},
+		ByteReader{0xd4, 0xc3, 0xb2},
 	}
 
-	first := []bool{true, true, false}
-	second := []bool{false, true, false}
-	third := []error{nil, nil, NotAPcapFile}
+	first := []bool{true, true, false, false}
+	second := []bool{false, true, false, false}
+	third := []error{nil, nil, NotAPcapFile, InsufficientLength}
 
 	for i, input := range in {
 		out1, out2, out3 := checkMagicNum(input)
