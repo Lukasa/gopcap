@@ -32,7 +32,7 @@ func checkMagicNum(src io.Reader) (bool, bool, error) {
 		return true, true, nil
 	}
 
-	return false, false, errors.New("Not a pcap file.")
+	return false, false, NotAPcapFile
 }
 
 // parsePacket parses a full packet out of the pcap file. It returns an error if any problems were
