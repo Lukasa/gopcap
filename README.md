@@ -5,6 +5,15 @@ gopcap is a pure Go implementation of the
 Pcap is the standard open-source packet capture format, and is defined by the
 [libpcap](http://wiki.wireshark.org/libpcap) C library.
 
+## Example
+
+The gopcap API is incredibly simple:
+
+    pcapfile, _ := os.Open("file.cap")
+    parsed, err := gopcap.Parse(pcapfile)
+
+For further examples, see the API documentation.
+
 ## Features
 
 - Fully synchronous API that is easy to make asynchronous.
