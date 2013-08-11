@@ -99,8 +99,8 @@ func populatePacketHeader(packet *Packet, src io.Reader, flipped bool) error {
 
 	// First is a pair of fields that build up the timestamp.
 	ts_seconds := getUint32(buffer[0:4], flipped)
-	ts_millis := getUint32(buffer[4:8], flipped)
-	packet.Timestamp = (time.Duration(ts_seconds) * time.Second) + (time.Duration(ts_millis) * time.Millisecond)
+	ts_micros := getUint32(buffer[4:8], flipped)
+	packet.Timestamp = (time.Duration(ts_seconds) * time.Second) + (time.Duration(ts_micros) * time.Microsecond)
 
 	// Next is the length of the data segment.
 	packet.IncludedLen = getUint32(buffer[8:12], flipped)
