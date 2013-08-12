@@ -60,3 +60,13 @@ func TestPopulatePacketHeaderGood(t *testing.T) {
 		t.Errorf("Incorrect actual length: expected %v, got %v", 96, pkt.ActualLen)
 	}
 }
+
+func TestPopulatePacketHeaderErr(t *testing.T) {
+	in := ByteReader{0xfa}
+	pkt := new(Packet)
+	err := populatePacketHeader(pkt, in, false)
+
+	if err != InsufficientLength {
+		t.Errorf("Unexpected error: expected %v, got %v", InsufficientLength, err)
+	}
+}
