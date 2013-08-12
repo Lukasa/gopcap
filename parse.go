@@ -93,7 +93,9 @@ func populatePacketHeader(packet *Packet, src io.Reader, flipped bool) error {
 	buffer := make([]byte, 16)
 	read_count, err := src.Read(buffer)
 
-	if read_count != 16 {
+	if err != nil {
+		return err
+	} else if read_count != 16 {
 		return InsufficientLength
 	}
 
