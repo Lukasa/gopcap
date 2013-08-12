@@ -98,3 +98,13 @@ func TestPopulateFileHeaderGood(t *testing.T) {
 		t.Errorf("Incorrect link type: expected %v, got %v.", ETHERNET, fle.LinkType)
 	}
 }
+
+func TestPopulateFileHeaderErr(t *testing.T) {
+	in := ByteReader{0xfa}
+	fle := new(PcapFile)
+	err := populateFileHeader(fle, in, false)
+
+	if err != InsufficientLength {
+		t.Errorf("Unexpected error: expected %v, got %v", InsufficientLength, err)
+	}
+}
