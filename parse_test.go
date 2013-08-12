@@ -70,3 +70,31 @@ func TestPopulatePacketHeaderErr(t *testing.T) {
 		t.Errorf("Unexpected error: expected %v, got %v", InsufficientLength, err)
 	}
 }
+
+func TestPopulateFileHeaderGood(t *testing.T) {
+	in := ByteReader{0x02, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00}
+	fle := new(PcapFile)
+	err := populateFileHeader(fle, in, true)
+
+	if err != nil {
+		t.Errorf("Received unexpected error: %v", err)
+	}
+	if fle.MajorVersion != uint16(2) {
+		t.Errorf("Incorrectly parsed major version: expected %v, got %v.", 2, fle.MajorVersion)
+	}
+	if fle.MinorVersion != uint16(4) {
+		t.Errorf("Incorrectly parsed minor version: expected %v, got %v.", 4, fle.MinorVersion)
+	}
+	if fle.TZCorrection != int32(0) {
+		t.Errorf("Got nonzero TZ correction: %v.", fle.TZCorrection)
+	}
+	if fle.SigFigs != uint32(0) {
+		t.Errorf("Got nonzero sig figs: %v.", fle.SigFigs)
+	}
+	if fle.MaxLen != uint32(65535) {
+		t.Errorf("Incorrectly parsed maximum len: expected %v, got %v.", 65535, fle.MaxLen)
+	}
+	if fle.LinkType != ETHERNET {
+		t.Errorf("Incorrect link type: expected %v, got %v.", ETHERNET, fle.LinkType)
+	}
+}
