@@ -121,6 +121,13 @@ type Packet struct {
 	Data        []byte
 }
 
+// This next section is the structures for each type of link-layer packet. They all conform to this
+// interface. You'll need to type assert to get the correct type. The types themselves are defined in
+// the link.go file.
+type LinkLayer interface {
+	Data() []byte
+}
+
 // Parse is the external API of gopcap. It takes anything that implements the
 // io.Reader interface, but will mostly expect a file produced by anything that
 // produces .pcap files. It will attempt to parse the entire file. If an error
