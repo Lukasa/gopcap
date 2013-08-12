@@ -1,6 +1,9 @@
 package gopcap
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 type ByteReader []byte
 
@@ -35,5 +38,25 @@ func TestCheckMagicNum(t *testing.T) {
 		if out3 != third[i] {
 			t.Errorf("Unexpected third return val: expected %v, got %v.", third[i], out3)
 		}
+	}
+}
+
+func TestPopulatePacketHeaderGood(t *testing.T) {
+	in := ByteReader{0xfa, 0x4f, 0xef, 0x44, 0x64, 0xfd, 0x09, 0x00, 0x60, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00}
+	pkt := new(Packet)
+	err := populatePacketHeader(pkt, in, true)
+	correct_ts := 321259*time.Hour + 31*time.Minute + 6*time.Second + 654*time.Millisecond + 692*time.Microsecond
+
+	if err != nil {
+		t.Errorf("Received unexpected error: %v", err)
+	}
+	if pkt.Timestamp != correct_ts {
+		t.Errorf("Incorrect timestamp: expected %v, got %v", correct_ts, pkt.Timestamp)
+	}
+	if pkt.IncludedLen != uint32(96) {
+		t.Errorf("Incorrect included length: expected %v, got %v", 96, pkt.IncludedLen)
+	}
+	if pkt.ActualLen != uint32(96) {
+		t.Errorf("Incorrect actual length: expected %v, got %v", 96, pkt.ActualLen)
 	}
 }
