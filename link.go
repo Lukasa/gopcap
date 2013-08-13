@@ -4,6 +4,10 @@ package gopcap
 // The above statement isn't entirely true, but it's true enough.
 const minEtherType uint16 = 1536
 
+//-------------------------------------------------------------------------------------------
+// EthernetFrame
+//-------------------------------------------------------------------------------------------
+
 // EthernetFrame represents a single ethernet frame. Valid only when the LinkType is ETHERNET.
 type EthernetFrame struct {
 	MACSource      []byte
