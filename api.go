@@ -126,6 +126,7 @@ type Packet struct {
 // the link.go file.
 type LinkLayer interface {
 	Data() []byte
+	FromBytes(data []byte) error
 }
 
 // Parse is the external API of gopcap. It takes anything that implements the

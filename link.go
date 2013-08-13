@@ -18,6 +18,11 @@ func (u *UnknownLink) Data() []byte {
 	return u.data
 }
 
+func (u *UnknownLink) FromBytes(data []byte) error {
+	u.data = data
+	return nil
+}
+
 //-------------------------------------------------------------------------------------------
 // EthernetFrame
 //-------------------------------------------------------------------------------------------
