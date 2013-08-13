@@ -5,6 +5,20 @@ package gopcap
 const minEtherType uint16 = 1536
 
 //-------------------------------------------------------------------------------------------
+// UnknownLink
+//-------------------------------------------------------------------------------------------
+
+// UnknownLink represents the data for a link type that gopcap doesn't understand. It simply
+// provides uninterpreted data representing the entire link-layer packet.
+type UnknownLink struct {
+	data []byte
+}
+
+func (u *UnknownLink) Data() []byte {
+	return u.data
+}
+
+//-------------------------------------------------------------------------------------------
 // EthernetFrame
 //-------------------------------------------------------------------------------------------
 
