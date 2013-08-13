@@ -10,6 +10,6 @@ type EthernetFrame struct {
 	data           []byte
 }
 
-func (e EthernetFrame) Data() []byte {
-	return data
+func (e *EthernetFrame) Data() []byte {
+	return e.data
 }
