@@ -36,7 +36,7 @@ func checkMagicNum(src io.Reader) (bool, bool, error) {
 
 // parsePacket parses a full packet out of the pcap file. It returns an error if any problems were
 // encountered.
-func parsePacket(pkt *Packet, src io.Reader, flipped bool) error {
+func parsePacket(pkt *Packet, src io.Reader, flipped bool, linkType Link) error {
 	err := populatePacketHeader(pkt, src, flipped)
 
 	if err != nil {
@@ -45,11 +45,11 @@ func parsePacket(pkt *Packet, src io.Reader, flipped bool) error {
 
 	data := make([]byte, pkt.IncludedLen)
 	readlen, err := src.Read(data)
-	pkt.Data = data
-
 	if uint32(readlen) != pkt.IncludedLen {
-		err = UnexpectedEOF
+		return UnexpectedEOF
 	}
+
+	pkt.Data, err = parseLinkData(data, linkType)
 
 	return err
 }
@@ -111,4 +111,20 @@ func populatePacketHeader(packet *Packet, src io.Reader, flipped bool) error {
 	packet.ActualLen = getUint32(buffer[12:16], flipped)
 
 	return err
+}
+
+// parseLinkData takes the data buffer containing the full link-layer packet (or equivalent, e.g.
+// Ethernet frame) and builds an appropriate in-memory representation.
+func parseLinkData(data []byte, linkType Link) (LinkLayer, error) {
+	var pkt LinkLayer
+
+	switch linkType {
+	case ETHERNET:
+		pkt = new(EthernetFrame)
+	default:
+		pkt = new(UnknownLink)
+	}
+
+	err := pkt.FromBytes(data)
+	return pkt, err
 }

@@ -118,7 +118,7 @@ type Packet struct {
 	Timestamp   time.Duration
 	IncludedLen uint32
 	ActualLen   uint32
-	Data        []byte
+	Data        LinkLayer
 }
 
 // This next section is the structures for each type of link-layer packet. They all conform to this
@@ -154,7 +154,7 @@ func Parse(src io.Reader) (PcapFile, error) {
 
 	for err == nil {
 		pkt := new(Packet)
-		err = parsePacket(pkt, src, flipped)
+		err = parsePacket(pkt, src, flipped, file.LinkType)
 		file.Packets = append(file.Packets, *pkt)
 	}
 
