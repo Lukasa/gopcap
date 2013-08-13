@@ -2,8 +2,8 @@ package gopcap
 
 // EthernetFrame represents a single ethernet frame. Valid only when the LinkType is ETHERNET.
 type EthernetFrame struct {
-	MACSource      [6]byte
-	MACDestination [6]byte
+	MACSource      []byte
+	MACDestination []byte
 	VLANTag        uint32
 	Length         uint16
 	EtherType      uint16
