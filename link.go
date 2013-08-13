@@ -4,7 +4,7 @@ package gopcap
 type EthernetFrame struct {
 	MACSource      []byte
 	MACDestination []byte
-	VLANTag        uint32
+	VLANTag        []byte
 	Length         uint16
 	EtherType      uint16
 	data           []byte
