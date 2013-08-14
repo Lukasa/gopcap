@@ -122,7 +122,7 @@ type Packet struct {
 }
 
 // LinkLayer is a non-specific representation of a single link-layer level datagram, e.g. an Ethernet
-// frame. It provides an abstract interface for pulling the lower layers out without specific knowledge
+// frame. It provides an abstract interface for pulling the higher layers out without specific knowledge
 // of the structure of the link-layer in question.
 type LinkLayer interface {
 	LinkData() []byte
