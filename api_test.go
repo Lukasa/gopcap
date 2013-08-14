@@ -79,7 +79,7 @@ func TestParse(t *testing.T) {
 	if frame.EtherType != uint16(2048) {
 		t.Errorf("Unexpected EtherType: expected %v, got %v", 2048, frame.EtherType)
 	}
-	if bytes.Compare(frame.Data(), data) != 0 {
+	if bytes.Compare(frame.LinkData(), data) != 0 {
 		t.Errorf("Data did not match.")
 	}
 }

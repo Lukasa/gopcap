@@ -14,7 +14,7 @@ type UnknownLink struct {
 	data []byte
 }
 
-func (u *UnknownLink) Data() []byte {
+func (u *UnknownLink) LinkData() []byte {
 	return u.data
 }
 
@@ -37,7 +37,7 @@ type EthernetFrame struct {
 	data           []byte
 }
 
-func (e *EthernetFrame) Data() []byte {
+func (e *EthernetFrame) LinkData() []byte {
 	return e.data
 }
 

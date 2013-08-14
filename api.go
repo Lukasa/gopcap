@@ -125,7 +125,7 @@ type Packet struct {
 // frame. It provides an abstract interface for pulling the lower layers out without specific knowledge
 // of the structure of the link-layer in question.
 type LinkLayer interface {
-	Data() []byte
+	LinkData() []byte
 	FromBytes(data []byte) error
 }
 
