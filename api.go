@@ -121,9 +121,9 @@ type Packet struct {
 	Data        LinkLayer
 }
 
-// This next section is the structures for each type of link-layer packet. They all conform to this
-// interface. You'll need to type assert to get the correct type. The types themselves are defined in
-// the link.go file.
+// LinkLayer is a non-specific representation of a single link-layer level datagram, e.g. an Ethernet
+// frame. It provides an abstract interface for pulling the lower layers out without specific knowledge
+// of the structure of the link-layer in question.
 type LinkLayer interface {
 	Data() []byte
 	FromBytes(data []byte) error
