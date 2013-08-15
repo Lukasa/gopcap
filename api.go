@@ -98,6 +98,48 @@ const (
 	BLUETOOTH_LE_LL            Link = 251
 )
 
+// Define the EtherType type, for ethernet frames. Additionally define some known ethertypes.
+type EtherType uint16
+
+const (
+	ETHERTYPE_IPV4    EtherType = 0x0800
+	ARP               EtherType = 0x0806
+	WAKE_ON_LAN       EtherType = 0x0842
+	TRILL             EtherType = 0x22F3
+	DECNET_PHASE_4    EtherType = 0x6003
+	REVERSE_ARP       EtherType = 0x8035
+	APPLETALK         EtherType = 0x809B
+	APPLETALK_ARP     EtherType = 0x80F3
+	IPX1              EtherType = 0x8137
+	IPX2              EtherType = 0x8138
+	QNET              EtherType = 0x8204
+	ETHERTYPE_IPV6    EtherType = 0x86DD
+	FLOWCONTROL       EtherType = 0x8808
+	SLOW              EtherType = 0x8809
+	COBRANET          EtherType = 0x8819
+	MPLS_UNICAST      EtherType = 0x8847
+	MPLS_MULTICAST    EtherType = 0x8848
+	PPPOE_DISCOVERY   EtherType = 0x8863
+	PPPOE_SESSION     EtherType = 0x8864
+	JUMBO_FRAMES      EtherType = 0x8870
+	HOMEPLUG          EtherType = 0x887B
+	EAP_OVER_LAN      EtherType = 0x888E
+	PROFINET          EtherType = 0x8892
+	HYPERSCSI         EtherType = 0x889A
+	ATA_OVER_ETHERNET EtherType = 0x88A2
+	ETHERCAT          EtherType = 0x88A4
+	POWERLINK         EtherType = 0x88AB
+	LLDP              EtherType = 0x88CC
+	SERCOS3           EtherType = 0x88CD
+	MRP               EtherType = 0x88E3
+	MAC_SECURITY      EtherType = 0x88E5
+	IEEE1588          EtherType = 0x88F7
+	FCOE              EtherType = 0x8906
+	FCOE_INIT         EtherType = 0x8914
+	ROCE              EtherType = 0x8915
+	HSR               EtherType = 0x892F
+)
+
 // PcapFile represents the parsed form of a single .pcap file. The structure
 // contains some details about the file itself, but is mostly a container for
 // the parsed Packets.

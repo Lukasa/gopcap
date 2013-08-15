@@ -33,7 +33,7 @@ type EthernetFrame struct {
 	MACDestination []byte
 	VLANTag        []byte
 	Length         uint16
-	EtherType      uint16
+	EtherType      EtherType
 	data           []byte
 }
 
@@ -60,7 +60,7 @@ func (e *EthernetFrame) FromBytes(data []byte) error {
 	// Handle the length/EtherType nonsense.
 	lenOrType := getUint16(data[12:14], false)
 	if lenOrType >= minEtherType {
-		e.EtherType = lenOrType
+		e.EtherType = EtherType(lenOrType)
 	} else {
 		e.Length = lenOrType
 	}
