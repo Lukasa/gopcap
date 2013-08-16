@@ -36,7 +36,7 @@ func (p *IPv4Packet) FromBytes(data []byte) error {
 	}
 
 	// Check that this actually is an IPv4 packet.
-	if uint8(data[0])&0xF0 != uint8(4) {
+	if ((uint8(data[0]) & 0xF0) >> 4) != uint8(4) {
 		return IncorrectPacket
 	}
 
@@ -44,7 +44,7 @@ func (p *IPv4Packet) FromBytes(data []byte) error {
 	p.IHL = uint8(data[0]) & 0x0F
 
 	// The DSCP is the high six(!) bits of the second byte.
-	p.DSCP = uint8(data[1]) & 0xFC
+	p.DSCP = (uint8(data[1]) & 0xFC) >> 2
 
 	// Congestion notification is the low two bits of the second byte.
 	p.ECN = uint8(data[1]) & 0x03
