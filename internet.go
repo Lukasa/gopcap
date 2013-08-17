@@ -135,3 +135,43 @@ type IPv6Packet struct {
 	DestinationAddress []byte
 	data               []byte
 }
+
+func (p *IPv6Packet) InternetData() []byte {
+	return p.data
+}
+
+func (p *IPv6Packet) FromBytes(data []byte) error {
+	// Confirm that we have enough data for the smallest possible header.
+	if len(data) < 40 {
+		return InsufficientLength
+	}
+
+	// Check that this actually is an IPv6 packet.
+	if ((uint8(data[0]) & 0xF0) >> 4) != uint8(6) {
+		return IncorrectPacket
+	}
+
+	// The traffic class is the octet following the version.
+	p.TrafficClass = (uint8(data[0]) & 0x0F) << 4
+	p.TrafficClass += (uint8(data[1]) * 0xF0) >> 4
+
+	// The flow label is the next 20 bits.
+	p.FlowLabel = (uint32(data[1]) & 0x0F) << 16
+	p.FlowLabel += uint32(data[2]) << 8
+	p.FlowLabel += uint32(data[3])
+
+	// The remaining fields are simply aligned.
+	p.Length = getUint16(data[4:6], false)
+	p.NextHeader = uint8(data[6])
+	p.HopLimit = uint8(data[7])
+
+	p.SourceAddress = data[8:24]
+	p.DestinationAddress = data[24:40]
+
+	// The data is everything else.
+	// NOTE: This is untrue, there are potential subsequent headers in the packet. Currently I'm ignoring
+	// them to go all "minimim-viable-product" on this library. We'll swing back to it.
+	p.data = data[40:]
+
+	return nil
+}
