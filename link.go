@@ -11,16 +11,17 @@ const minEtherType uint16 = 1536
 // UnknownLink represents the data for a link type that gopcap doesn't understand. It simply
 // provides uninterpreted data representing the entire link-layer packet.
 type UnknownLink struct {
-	data []byte
+	data InternetLayer
 }
 
-func (u *UnknownLink) LinkData() []byte {
+func (u *UnknownLink) LinkData() InternetLayer {
 	return u.data
 }
 
 func (u *UnknownLink) FromBytes(data []byte) error {
-	u.data = data
-	return nil
+	u.data = new(UnknownINet)
+	err := u.data.FromBytes(data)
+	return err
 }
 
 //-------------------------------------------------------------------------------------------
@@ -34,10 +35,10 @@ type EthernetFrame struct {
 	VLANTag        []byte
 	Length         uint16
 	EtherType      EtherType
-	data           []byte
+	data           InternetLayer
 }
 
-func (e *EthernetFrame) LinkData() []byte {
+func (e *EthernetFrame) LinkData() InternetLayer {
 	return e.data
 }
 
@@ -66,7 +67,19 @@ func (e *EthernetFrame) FromBytes(data []byte) error {
 	}
 
 	// Everything else is payload data.
-	e.data = data[14:]
+	e.buildInternetLayer(data[14:])
 
 	return nil
+}
+
+// buildInternetLayer creates the internet layer sub-data for a link layer datagram.
+func (e *EthernetFrame) buildInternetLayer(data []byte) {
+	switch e.EtherType {
+	case ETHERTYPE_IPV4:
+		e.data = new(IPv4Packet)
+		e.data.FromBytes(data)
+	default:
+		e.data = new(UnknownINet)
+		e.data.FromBytes(data)
+	}
 }

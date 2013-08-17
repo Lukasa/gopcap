@@ -36,7 +36,4 @@ func TestEthernetFrameGood(t *testing.T) {
 	if frame.EtherType != EtherType(2048) {
 		t.Errorf("Unexpected EtherType: expected %v, got %v", 2048, frame.EtherType)
 	}
-	if len(frame.LinkData()) != 82 {
-		t.Errorf("Incorrect data length: expected %v, got %v", 82, len(frame.LinkData()))
-	}
 }
