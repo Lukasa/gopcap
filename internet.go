@@ -23,6 +23,8 @@ func (u *UnknownINet) FromBytes(data []byte) error {
 // IPv4
 //-------------------------------------------------------------------------------------------
 
+// IPv4Packet represents an unpacked IPv4 packet. This method of storing the IPv4 packet data
+// is less efficient than the byte-packed form used on the wire.
 type IPv4Packet struct {
 	IHL            uint8
 	DSCP           uint8
