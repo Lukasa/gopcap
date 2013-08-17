@@ -1,6 +1,25 @@
 package gopcap
 
 //-------------------------------------------------------------------------------------------
+// UnknownINet
+//-------------------------------------------------------------------------------------------
+
+// UnknownINet represents the data for an internet-layer packet that gopcap doesn't understand.
+// It simply provides uninterpreted data representing the entire internet-layer packet.
+type UnknownINet struct {
+	data []byte
+}
+
+func (u *UnknownINet) InternetData() []byte {
+	return u.data
+}
+
+func (u *UnknownINet) FromBytes(data []byte) error {
+	u.data = data
+	return nil
+}
+
+//-------------------------------------------------------------------------------------------
 // IPv4
 //-------------------------------------------------------------------------------------------
 
