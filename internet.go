@@ -120,3 +120,18 @@ func (p *IPv4Packet) FromBytes(data []byte) error {
 	p.data = data[20:]
 	return nil
 }
+
+//-------------------------------------------------------------------------------------------
+// IPv4
+//-------------------------------------------------------------------------------------------
+
+type IPv6Packet struct {
+	TrafficClass       uint8
+	FlowLabel          uint32 // This is a huge waste of space for a 20-bit field. Rethink?
+	Length             uint16
+	NextHeader         uint8
+	HopLimit           uint8
+	SourceAddress      []byte
+	DestinationAddress []byte
+	data               []byte
+}
