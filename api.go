@@ -141,6 +141,19 @@ const (
 	HSR               EtherType = 0x892F
 )
 
+// IPProtocol defines the potential protocols enclosed by an IP packet. Some representative
+// symbolic constants are defined in this file, but many more exist.
+type IPProtocol uint8
+
+const (
+	IPP_ICMP      IPProtocol = 0x01
+	IPP_TCP       IPProtocol = 0x06
+	IPP_UDP       IPProtocol = 0x11
+	IPP_TLSP      IPProtocol = 0x38
+	IPP_IPV6_ICMP IPProtocol = 0x3A
+	IPP_SCTP      IPProtocol = 0x84
+)
+
 // PcapFile represents the parsed form of a single .pcap file. The structure
 // contains some details about the file itself, but is mostly a container for
 // the parsed Packets.
