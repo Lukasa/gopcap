@@ -45,4 +45,9 @@ type TCPSegment struct {
 	Checksum        uint16
 	UrgentOffset    uint16
 	OptionData      []byte // This is temporary. We should handle TCP options properly.
+	data            []byte
+}
+
+func (t *TCPSegment) TransportData() []byte {
+	return t.data
 }
