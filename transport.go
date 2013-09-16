@@ -54,7 +54,7 @@ func (t *TCPSegment) TransportData() []byte {
 
 func (t *TCPSegment) FromBytes(data []byte) error {
 	// Begin by confirming that we have enough data for a complete TCP header.
-	if len(data) < 80 {
+	if len(data) < 20 {
 		return InsufficientLength
 	}
 
@@ -116,7 +116,7 @@ func (t *TCPSegment) FromBytes(data []byte) error {
 	t.OptionData = data[:extraBytes]
 
 	// All that remains is the contained data.
-	t.data = data[20+extraBytes:]
+	t.data = data[extraBytes:]
 
 	return nil
 }
