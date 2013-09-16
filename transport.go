@@ -51,3 +51,72 @@ type TCPSegment struct {
 func (t *TCPSegment) TransportData() []byte {
 	return t.data
 }
+
+func (t *TCPSegment) FromBytes(data []byte) error {
+	// Begin by confirming that we have enough data for a complete TCP header.
+	if len(data) < 80 {
+		return InsufficientLength
+	}
+
+	// The first four fields are really easy.
+	t.SourcePort = getUint16(data[0:2], false)
+	t.DestinationPort = getUint16(data[2:4], false)
+	t.SequenceNumber = getUint32(data[4:8], false)
+	t.AckNumber = getUint32(data[8:12], false)
+
+	// The header size is the top four bits of the next byte.
+	t.HeaderSize = uint8(data[12]) >> 4
+
+	// Now we have all the flag fields. First, the NS flag.
+	if (uint8(data[12]) & 0x01) != 0 {
+		t.NS = true
+	}
+
+	// The next eight flags are all in the next byte.
+	flags := uint8(data[13])
+	if (flags & 0x80) != 0 {
+		t.CWR = true
+	}
+	if (flags & 0x40) != 0 {
+		t.ECE = true
+	}
+	if (flags & 0x20) != 0 {
+		t.URG = true
+	}
+	if (flags & 0x10) != 0 {
+		t.ACK = true
+	}
+	if (flags & 0x08) != 0 {
+		t.PSH = true
+	}
+	if (flags & 0x04) != 0 {
+		t.RST = true
+	}
+	if (flags & 0x02) != 0 {
+		t.SYN = true
+	}
+	if (flags & 0x01) != 0 {
+		t.FIN = true
+	}
+
+	// Now we're back to sane things.
+	t.WindowSize = getUint16(data[14:16], false)
+	t.Checksum = getUint16(data[16:18], false)
+	t.UrgentOffset = getUint16(data[18:20], false)
+
+	// If the header size is larger than 5 (it's measured in 32-bit words for reasons that escape me),
+	// we have some number of extra bytes that form the TCP options.
+	extraBytes := (t.HeaderSize - 5) * 4
+	data = data[20:]
+
+	if len(data) < int(extraBytes) {
+		return InsufficientLength
+	}
+
+	t.OptionData = data[:extraBytes]
+
+	// All that remains is the contained data.
+	t.data = data[20+extraBytes:]
+
+	return nil
+}
