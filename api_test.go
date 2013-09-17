@@ -80,9 +80,6 @@ func TestParse(t *testing.T) {
 	expectedSrc := []byte{192, 168, 1, 2}
 	expectedDst := []byte{212, 204, 214, 114}
 
-	if err != nil {
-		t.Errorf("Unexpected error: %v", err)
-	}
 	if pkt.IHL != uint8(5) {
 		t.Errorf("Unexpected IHL: expected %v, got %v", 5, pkt.IHL)
 	}
