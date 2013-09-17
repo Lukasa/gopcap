@@ -35,7 +35,7 @@ type IPv4Packet struct {
 	MoreFragments  bool
 	FragmentOffset uint16
 	TTL            uint8
-	Protocol       uint8
+	Protocol       IPProtocol
 	Checksum       uint16
 	SourceAddress  []byte
 	DestAddress    []byte
@@ -92,7 +92,7 @@ func (p *IPv4Packet) FromBytes(data []byte) error {
 	p.TTL = uint8(data[8])
 
 	// Protocol is the tenth.
-	p.Protocol = uint8(data[9])
+	p.Protocol = IPProtocol(data[9])
 
 	// Header checksum is eleven and twelve.
 	p.Checksum = getUint16(data[10:12], false)

@@ -115,8 +115,8 @@ func TestParse(t *testing.T) {
 	if pkt.TTL != uint8(64) {
 		t.Errorf("Unexpected TTL: expected %v, got %v", 64, pkt.TTL)
 	}
-	if pkt.Protocol != uint8(6) {
-		t.Errorf("Unexpected protocol: expected %v, got %v", 6, pkt.Protocol)
+	if pkt.Protocol != IPP_TCP {
+		t.Errorf("Unexpected protocol: expected %v, got %v", IPP_TCP, pkt.Protocol)
 	}
 	if pkt.Checksum != uint16(22223) {
 		t.Errorf("Unexpected checksum: expected %v, got %v", 22223, pkt.Checksum)
