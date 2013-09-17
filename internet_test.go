@@ -63,7 +63,4 @@ func TestIPv4Good(t *testing.T) {
 	if len(pkt.Options) != 0 {
 		t.Errorf("Shouldn't have any options: got %v", pkt.Options)
 	}
-	if len(pkt.InternetData()) != 62 {
-		t.Errorf("Unexpected data length: expected %v, got %v", 62, len(pkt.InternetData()))
-	}
 }

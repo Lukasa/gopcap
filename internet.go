@@ -7,15 +7,16 @@ package gopcap
 // UnknownINet represents the data for an internet-layer packet that gopcap doesn't understand.
 // It simply provides uninterpreted data representing the entire internet-layer packet.
 type UnknownINet struct {
-	data []byte
+	data TransportLayer
 }
 
-func (u *UnknownINet) InternetData() []byte {
+func (u *UnknownINet) InternetData() TransportLayer {
 	return u.data
 }
 
 func (u *UnknownINet) FromBytes(data []byte) error {
-	u.data = data
+	u.data = new(UnknownTransport)
+	u.data.FromBytes(data)
 	return nil
 }
 
@@ -40,10 +41,10 @@ type IPv4Packet struct {
 	SourceAddress  []byte
 	DestAddress    []byte
 	Options        []byte
-	data           []byte
+	data           TransportLayer
 }
 
-func (p *IPv4Packet) InternetData() []byte {
+func (p *IPv4Packet) InternetData() TransportLayer {
 	return p.data
 }
 
@@ -117,8 +118,21 @@ func (p *IPv4Packet) FromBytes(data []byte) error {
 		return IncorrectPacket
 	}
 
-	p.data = data[20:]
+	// Build the transport layer data.
+	p.buildTransportLayer(data[20:])
+
 	return nil
+}
+
+func (p *IPv4Packet) buildTransportLayer(data []byte) {
+	switch p.Protocol {
+	case IPP_TCP:
+		p.data = new(TCPSegment)
+		p.data.FromBytes(data)
+	default:
+		p.data = new(UnknownTransport)
+		p.data.FromBytes(data)
+	}
 }
 
 //-------------------------------------------------------------------------------------------
@@ -133,10 +147,10 @@ type IPv6Packet struct {
 	HopLimit           uint8
 	SourceAddress      []byte
 	DestinationAddress []byte
-	data               []byte
+	data               TransportLayer
 }
 
-func (p *IPv6Packet) InternetData() []byte {
+func (p *IPv6Packet) InternetData() TransportLayer {
 	return p.data
 }
 
@@ -171,7 +185,8 @@ func (p *IPv6Packet) FromBytes(data []byte) error {
 	// The data is everything else.
 	// NOTE: This is untrue, there are potential subsequent headers in the packet. Currently I'm ignoring
 	// them to go all "minimim-viable-product" on this library. We'll swing back to it.
-	p.data = data[40:]
+	p.data = new(UnknownTransport)
+	p.data.FromBytes(data[40:])
 
 	return nil
 }

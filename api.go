@@ -189,7 +189,7 @@ type LinkLayer interface {
 // IPv4 datagram. It provides an abstract interface for pulling the higher layers out without specific
 // knowledge of the structure of the internet-layer in question.
 type InternetLayer interface {
-	InternetData() []byte
+	InternetData() TransportLayer
 	FromBytes(data []byte) error
 }
 
