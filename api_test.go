@@ -122,4 +122,66 @@ func TestParse(t *testing.T) {
 	if len(pkt.Options) != 0 {
 		t.Errorf("Shouldn't have any options: got %v", pkt.Options)
 	}
+
+	// Next up is the TCP segment.
+	segment := pkt.InternetData().(*TCPSegment)
+	optBytes := []byte{0x01, 0x01, 0x08, 0x0a, 0x00, 0xd8, 0xea, 0x48, 0x82, 0xe4, 0xda, 0xb0}
+
+	if segment.SourcePort != uint16(2848) {
+		t.Errorf("Unexpected source port: expected %v, got %v", 2848, segment.SourcePort)
+	}
+	if segment.DestinationPort != uint16(6667) {
+		t.Errorf("Unexpected destination port: expected %v, got %v", 6667, segment.DestinationPort)
+	}
+	if segment.SequenceNumber != uint32(1304973037) {
+		t.Errorf("Unexpected sequence number: expected %v, got %v", 1304973037, segment.SequenceNumber)
+	}
+	if segment.AckNumber != uint32(1425084530) {
+		t.Errorf("Unexpected ack number: expected %v, got %v", 1425084530, segment.AckNumber)
+	}
+	if segment.HeaderSize != uint8(8) {
+		t.Errorf("Unexpected header size: expected %v, got %v", 8, segment.HeaderSize)
+	}
+	if segment.NS {
+		t.Errorf("Expected NS flag not to be set and it was.")
+	}
+	if segment.CWR {
+		t.Errorf("Expected CWR flag not to be set and it was.")
+	}
+	if segment.ECE {
+		t.Errorf("Expected ECE flag not to be set and it was.")
+	}
+	if segment.URG {
+		t.Errorf("Expected URG flag not to be set and it was.")
+	}
+	if !segment.ACK {
+		t.Errorf("Expected ACK flag to be set and it wasn't.")
+	}
+	if !segment.PSH {
+		t.Errorf("Expected PSH flag to be set and it wasn't.")
+	}
+	if segment.RST {
+		t.Errorf("Expected RST flag not to be set and it was.")
+	}
+	if segment.SYN {
+		t.Errorf("Expected SYN flag not to be set and it was.")
+	}
+	if segment.FIN {
+		t.Errorf("Expected FIN flag not to be set and it was.")
+	}
+	if segment.WindowSize != uint16(8011) {
+		t.Errorf("Unexpected window size: expected %v, got %v", 8011, segment.WindowSize)
+	}
+	if segment.Checksum != 0x6d2e {
+		t.Errorf("Unexpected checksum: expected %v, got %v", 0x6d2e, segment.Checksum)
+	}
+	if segment.UrgentOffset != uint16(0) {
+		t.Errorf("Unexpected urgent offset: expected %v, got %v", 0, segment.UrgentOffset)
+	}
+	if bytes.Compare(segment.OptionData, optBytes) != 0 {
+		t.Errorf("Unexpected option data: expected %v, got %v", optBytes, segment.OptionData)
+	}
+	if len(segment.TransportData()) != 30 {
+		t.Errorf("Unexpected length of transport data: expected %v, got %v", 30, len(segment.TransportData()))
+	}
 }
