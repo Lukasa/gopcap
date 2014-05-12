@@ -128,11 +128,12 @@ func (p *IPv4Packet) buildTransportLayer(data []byte) {
 	switch p.Protocol {
 	case IPP_TCP:
 		p.data = new(TCPSegment)
-		p.data.FromBytes(data)
+	case IPP_UDP:
+		p.data = new(UDPDatagram)
 	default:
 		p.data = new(UnknownTransport)
-		p.data.FromBytes(data)
 	}
+	p.data.FromBytes(data)
 }
 
 //-------------------------------------------------------------------------------------------
@@ -143,7 +144,7 @@ type IPv6Packet struct {
 	TrafficClass       uint8
 	FlowLabel          uint32 // This is a huge waste of space for a 20-bit field. Rethink?
 	Length             uint16
-	NextHeader         uint8
+	NextHeader         IPProtocol
 	HopLimit           uint8
 	SourceAddress      []byte
 	DestinationAddress []byte
@@ -176,17 +177,30 @@ func (p *IPv6Packet) FromBytes(data []byte) error {
 
 	// The remaining fields are simply aligned.
 	p.Length = getUint16(data[4:6], false)
-	p.NextHeader = uint8(data[6])
+	p.NextHeader = IPProtocol(data[6])
 	p.HopLimit = uint8(data[7])
 
 	p.SourceAddress = data[8:24]
 	p.DestinationAddress = data[24:40]
 
-	// The data is everything else.
-	// NOTE: This is untrue, there are potential subsequent headers in the packet. Currently I'm ignoring
-	// them to go all "minimim-viable-product" on this library. We'll swing back to it.
-	p.data = new(UnknownTransport)
-	p.data.FromBytes(data[40:])
+	// Following the fixed headers are a sequence of extension headers
+	// terminating in the transport data.
+	p.parseRemainingHeaders(data[40:])
 
 	return nil
+}
+
+func (p *IPv6Packet) parseRemainingHeaders(data []byte) {
+	// Currently we don't support any extension headers so if the next header
+	// isn't the transport data then give up and interpret it as an unknown
+	// transport type.
+	switch p.NextHeader {
+	case IPP_TCP:
+		p.data = new(TCPSegment)
+	case IPP_UDP:
+		p.data = new(UDPDatagram)
+	default:
+		p.data = new(UnknownTransport)
+	}
+	p.data.FromBytes(data)
 }
