@@ -77,9 +77,10 @@ func (e *EthernetFrame) buildInternetLayer(data []byte) {
 	switch e.EtherType {
 	case ETHERTYPE_IPV4:
 		e.data = new(IPv4Packet)
-		e.data.FromBytes(data)
+	case ETHERTYPE_IPV6:
+		e.data = new(IPv6Packet)
 	default:
 		e.data = new(UnknownINet)
-		e.data.FromBytes(data)
 	}
+	e.data.FromBytes(data)
 }
