@@ -128,11 +128,12 @@ func (p *IPv4Packet) buildTransportLayer(data []byte) {
 	switch p.Protocol {
 	case IPP_TCP:
 		p.data = new(TCPSegment)
-		p.data.FromBytes(data)
+	case IPP_UDP:
+		p.data = new(UDPDatagram)
 	default:
 		p.data = new(UnknownTransport)
-		p.data.FromBytes(data)
 	}
+	p.data.FromBytes(data)
 }
 
 //-------------------------------------------------------------------------------------------
