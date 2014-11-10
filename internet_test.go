@@ -2,8 +2,65 @@ package gopcap
 
 import (
 	"bytes"
+	"encoding/hex"
 	"testing"
 )
+
+func TestIPv6(t *testing.T) {
+	dataStr := "0060970769ea0000860580da86dd60000000002411403ffe050700000001020086fffe0580da3ffe0501481900000000000000000042095c00350024f0090006010000010000000000000669746f6a756e036f72670000ff0001"
+
+	// leaving only IP, TCP and other encapsulated data
+	data, _ := hex.DecodeString(dataStr[28:])
+
+	expectedSrc, _ := hex.DecodeString("3ffe050700000001020086fffe0580da")
+	expectedDst, _ := hex.DecodeString("3ffe0501481900000000000000000042")
+
+	pkt := new(IPv6Packet)
+	err := pkt.FromBytes(data)
+
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+	if pkt.Length != 36 {
+		t.Errorf("Unexpected payload length: expected %v, got %v", 36, pkt.Length)
+	}
+
+	if pkt.HopLimit != 64 {
+		t.Errorf("Unexpected hop limit: expected %v, got %v", 64, pkt.HopLimit)
+	}
+
+	if pkt.TrafficClass != 0 {
+		t.Errorf("Unexpected traffic class: expected %v, got %v", 0, pkt.TrafficClass)
+	}
+
+	if bytes.Compare(pkt.SourceAddress, expectedSrc) != 0 {
+		t.Errorf("Unexpected source address: expected %v, got %v", expectedSrc, pkt.SourceAddress)
+	}
+
+	if bytes.Compare(pkt.DestinationAddress, expectedDst) != 0 {
+		t.Errorf("Unexpected destination address: expected %v, got %v", expectedDst, pkt.DestinationAddress)
+	}
+
+}
+
+// Special case of the Telnet packet padded with zeros at Ethernet Frame level
+func TestIPv4EthernetPaddedPacket(t *testing.T) {
+
+	dataStr := "001d72c0c8a1ca08138f0008080045c0002de0610000ff0690a8c0a86496c0a864190017e6de9af322eaa3bbb65050180ff2bbb900000d0a50313e00"
+
+	// leaving only IP, TCP and other encapsulated data
+	data, _ := hex.DecodeString(dataStr[28:])
+
+	pkt := new(IPv4Packet)
+	err := pkt.FromBytes(data)
+
+	// Checking that Padded packet can be parsed
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+}
 
 func TestIPv4Good(t *testing.T) {
 	// Pull some test data.
