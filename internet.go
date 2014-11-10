@@ -114,12 +114,13 @@ func (p *IPv4Packet) FromBytes(data []byte) error {
 	// The data length is the total length, minus the headers. The headers are, for no good
 	// reason, measured in 32-bit words, so the data length is actually:
 	dataLen := p.TotalLength - (uint16(p.IHL) * 4)
-	if len(data[20:]) != int(dataLen) {
+
+	if dataLen > uint16(len(data[20:])) {
 		return IncorrectPacket
 	}
 
 	// Build the transport layer data.
-	p.buildTransportLayer(data[20:])
+	p.buildTransportLayer(data[20 : 20+dataLen])
 
 	return nil
 }
@@ -183,9 +184,12 @@ func (p *IPv6Packet) FromBytes(data []byte) error {
 	p.SourceAddress = data[8:24]
 	p.DestinationAddress = data[24:40]
 
+	if p.Length > uint16(len(data[40:])) {
+		return IncorrectPacket
+	}
 	// Following the fixed headers are a sequence of extension headers
 	// terminating in the transport data.
-	p.parseRemainingHeaders(data[40:])
+	p.parseRemainingHeaders(data[40 : 40+p.Length])
 
 	return nil
 }
